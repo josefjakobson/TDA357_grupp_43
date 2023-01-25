@@ -1,13 +1,14 @@
 CREATE TABLE Students(
-    idnr INT PRIMARY KEY,
+    idnr TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     login TEXT NOT NULL,
-    program CHAR(2) NOT NULL
+    program TEXT NOT NULL
 );
 
 CREATE TABLE Branches(
-    name TEXT,
-    program CHAR(2),
+    name TEXT NOT NULL,
+    program TEXT NOT NULL,
+    UNIQUE(name, program),
     PRIMARY KEY(name,program)
 );
 
@@ -19,57 +20,62 @@ CREATE TABLE Courses(
 );
 
 CREATE TABLE LimitedCourses(
-    code CHAR(6) REFERENCES Courses(code),
+    code CHAR(6) REFERENCES Courses(code) UNIQUE,
     capacity INT NOT NULL
 );
 
 CREATE TABLE StudentBranches(
-    student INT REFERENCES Students(idnr), 
-    branch TEXT REFERENCES Branches(name),
-    program CHAR(2) REFERENCES Branches(program)
-    );
+    student TEXT REFERENCES Students(idnr), 
+    program TEXT NOT NULL,
+    branch TEXT NOT NULL,
+    FOREIGN KEY (branch, program) REFERENCES Branches(name, program)
+);
 
  
 CREATE TABLE Classifications(
     name TEXT PRIMARY KEY
 );
 
-Classified( 
+CREATE TABLE Classified( 
     course CHAR(6) REFERENCES Courses(code),
     classification TEXT REFERENCES Classifications(name)
 
 );
  
-MandatoryProgram(
+CREATE TABLE MandatoryProgram(
     course CHAR(6) REFERENCES Courses(code),
-    program CHAR(2) REFERENCES Branches(program)
+    program TEXT,
+    PRIMARY KEY (course, program)
 );
 
-MandatoryBranch(
+CREATE TABLE MandatoryBranch(
     course CHAR(6) REFERENCES Courses(code),
-    branch TEXT REFERENCES Branches(name),
-    program CHAR(2) REFERENCES Branches(program)
+    program TEXT,
+    branch TEXT,
+    FOREIGN KEY (branch, program) REFERENCES Branches(name, program)
+
 );
 
-RecommendedBranch(
+CREATE TABLE RecommendedBranch(
     course CHAR(6) REFERENCES Courses(code),
-    branch TEXT REFERENCES Branches(name),
-    program CHAR(2) REFERENCES Branches(program)
+    program TEXT,
+    branch TEXT,
+    FOREIGN KEY (branch, program) REFERENCES Branches(name, program)
 ); 
 
-Registered(
-    student INT REFERENCES Students(idnr),
+CREATE TABLE Registered(
+    student TEXT REFERENCES Students(idnr),
     course CHAR(6) REFERENCES Courses(code)
 );
 
-Taken(
-    student INT REFERENCES Students(idnr),
+CREATE TABLE Taken(
+    student TEXT REFERENCES Students(idnr),
     course CHAR(6) REFERENCES Courses(code),
     grade CHAR(1) NOT NULL
 ); 
 
-WaitingList(-- position is either a SERIAL, a TIMESTAMP or the actual position 
-    student INT REFERENCES Students(idnr),
+CREATE TABLE WaitingList(-- position is either a SERIAL, a TIMESTAMP or the actual position 
+    student TEXT REFERENCES Students(idnr),
     course CHAR(6) REFERENCES LimitedCourses(code),
     position INT NOT NULL
 

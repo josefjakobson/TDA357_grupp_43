@@ -14,9 +14,8 @@ ALL VIEWS
 */
 
 CREATE VIEW BasicInformation AS
-SELECT idnr, name, login, program, branch
-FROM Students, Studentbranches
-WHERE condition???; 
+SELECT Students, StudentBranches
+JOIN Students ON StudentBranches.branch WHERE StudentBranches.student = Students.idnr
 
 CREATE VIEW FinishedCourses AS
 SELECT student, course, grade, credits
