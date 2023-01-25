@@ -14,7 +14,7 @@ CREATE TABLE Branches(
 CREATE TABLE Courses(
     code CHAR(6) PRIMARY KEY,
     name TEXT NOT NULL,
-    credits TEXT NOT NULL,
+    credits INT NOT NULL,
     department TEXT NOT NULL
 );
 
