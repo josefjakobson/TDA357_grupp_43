@@ -8,7 +8,6 @@ CREATE TABLE Students(
 CREATE TABLE Branches(
     name TEXT NOT NULL,
     program TEXT NOT NULL,
-    UNIQUE(name, program),
     PRIMARY KEY(name,program)
 );
 
@@ -26,9 +25,10 @@ CREATE TABLE LimitedCourses(
 
 CREATE TABLE StudentBranches(
     student TEXT REFERENCES Students(idnr), 
-    program TEXT NOT NULL,
     branch TEXT NOT NULL,
-    FOREIGN KEY (branch, program) REFERENCES Branches(name, program)
+    program TEXT NOT NULL,
+    FOREIGN KEY (branch, program) REFERENCES Branches(name, program),
+    PRIMARY KEY(student)
 );
 
  
