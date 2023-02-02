@@ -50,16 +50,16 @@ CREATE TABLE MandatoryProgram(
 
 CREATE TABLE MandatoryBranch(
     course CHAR(6) REFERENCES Courses(code),
-    program TEXT,
     branch TEXT,
+    program TEXT,
     FOREIGN KEY (branch, program) REFERENCES Branches(name, program)
 
 );
 
 CREATE TABLE RecommendedBranch(
     course CHAR(6) REFERENCES Courses(code),
-    program TEXT,
     branch TEXT,
+    program TEXT,
     FOREIGN KEY (branch, program) REFERENCES Branches(name, program)
 ); 
 

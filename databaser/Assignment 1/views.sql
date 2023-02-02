@@ -14,30 +14,48 @@ ALL VIEWS
 */
 
 CREATE VIEW BasicInformation AS
-SELECT Students, StudentBranches
-JOIN Students ON StudentBranches.branch WHERE StudentBranches.student = Students.idnr
+    SELECT 
+    Students.idnr as idnr,
+    Students.name as name,
+    Students.login as login,
+    Students.program as program,
+    StudentBranches.branch as branch
+    FROM Students
+    LEFT JOIN StudentBranches ON idnr = student
+    ORDER BY idnr;
+
 
 CREATE VIEW FinishedCourses AS
-SELECT student, course, grade, credits
-FROM Taken, Courses
-WHERE condition???;
+    SELECT 
+    Taken.student,
+    Taken.course,
+    Taken.grade,
+    Courses.credits FROM Taken
+    LEFT JOIN Courses ON Taken.course = Courses.code
+    ORDER BY student;
+    
 
 CREATE VIEW PassedCourses AS
-SELECT student, course, credits
-FROM FinishedCourses
-WHERE condition???;
+    SELECT 
+    Taken.student AS student,
+    Taken.course AS course,
+    Courses.credits FROM Taken
+    LEFT JOIN Courses ON Taken.course = Courses.code WHERE Taken.grade != 'U'
+    ORDER BY student;
+
 
 CREATE VIEW Registrations AS
-SELECT student, course, status
-FROM Registered /*status är jag fundersam över*/
-WHERE condition???;
+    SELECT
+    student, course, 'registered' AS status FROM Registered
+    UNION
+    SELECT student, course, 'waiting' AS status FROM WaitingList;
+
 
 CREATE VIEW UnreadMandatory AS
-SELECT student, course
-FROM /*osäker*/
-WHERE condition???;
+    
 
+/*
 CREATE VIEW PathToGraduation AS
-SELECT /*osäker*/
-FROM /*osäker*/
-WHERE /*osäker*/;
+SELECT osäker
+FROM osäker
+WHERE osäker; */
