@@ -50,12 +50,30 @@ CREATE VIEW Registrations AS
     UNION
     SELECT student, course, 'waiting' AS status FROM WaitingList;
 
-
-CREATE VIEW UnreadMandatory AS
+CREATE VIEW MandatoryCourses AS
+    SELECT
+    student, MandatoryBranch.course
+    FROM StudentBranches, MandatoryBranch
+    WHERE StudentBranches.branch = MandatoryBranch.branch
+    AND StudentBranches.program = MandatoryBranch.program
+    UNION
+    SELECT student, MandatoryProgram.course
+    FROM StudentBranches, MandatoryProgram
+    WHERE StudentBranches.program = MandatoryProgram.program;
     
+    
+CREATE VIEW UnreadMandatory AS
+    SELECT
+    course
+    FROM MandatoryCourses
+    EXCEPT 
+    SELECT 
+    student, course
+    FROM PassedCourses
 
-/*
+
+
 CREATE VIEW PathToGraduation AS
-SELECT osäker
-FROM osäker
-WHERE osäker; */
+SELECT 
+FROM 
+WHERE 
