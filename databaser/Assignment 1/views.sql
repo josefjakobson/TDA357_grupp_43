@@ -64,16 +64,35 @@ CREATE VIEW MandatoryCourses AS
     
 CREATE VIEW UnreadMandatory AS
     SELECT
-    course
+    student, course
     FROM MandatoryCourses
     EXCEPT 
     SELECT 
     student, course
+    FROM PassedCourses;
+
+CREATE VIEW TotalCredits AS
+    SELECT SUM(credits)
     FROM PassedCourses
+    Group by student;
 
+CREATE VIEW MandatoryLeft AS
+    SELECT COUNT(course)
+    FROM UnreadMandatory
+    Group by student;
 
+CREATE VIEW MathCredits AS
+    SELECT SUM(credits)
+    FROM PassedCourses, Classified
+    WHERE PassedCourses.course = Classified.course
+    AND Classified.classification = 'Math'
+    Group by student;
+
+/*CREATE VIEW ResearchCredits AS
+
+CREATE VIEW SeminarCourses AS
 
 CREATE VIEW PathToGraduation AS
-SELECT 
-FROM 
-WHERE 
+
+
+CREATE VIEW Qualified AS*/
