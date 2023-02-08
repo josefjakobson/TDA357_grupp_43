@@ -14,12 +14,12 @@ CREATE TABLE Branches(
 CREATE TABLE Courses(
     code CHAR(6) PRIMARY KEY,
     name TEXT NOT NULL,
-    credits INT NOT NULL,
+    credits FLOAT NOT NULL,
     department TEXT NOT NULL
 );
 
 CREATE TABLE LimitedCourses(
-    code CHAR(6) REFERENCES Courses(code) UNIQUE,
+    code CHAR(6) REFERENCES Courses(code) PRIMARY KEY,
     capacity INT NOT NULL
 );
 
@@ -38,8 +38,8 @@ CREATE TABLE Classifications(
 
 CREATE TABLE Classified( 
     course CHAR(6) REFERENCES Courses(code),
-    classification TEXT REFERENCES Classifications(name)
-
+    classification TEXT REFERENCES Classifications(name),
+    PRIMARY KEY(course, classification)
 );
  
 CREATE TABLE MandatoryProgram(
@@ -52,32 +52,36 @@ CREATE TABLE MandatoryBranch(
     course CHAR(6) REFERENCES Courses(code),
     branch TEXT,
     program TEXT,
-    FOREIGN KEY (branch, program) REFERENCES Branches(name, program)
-
+    FOREIGN KEY (branch, program) REFERENCES Branches(name, program),
+    PRIMARY KEY(course, branch, program)
 );
 
 CREATE TABLE RecommendedBranch(
     course CHAR(6) REFERENCES Courses(code),
     branch TEXT,
     program TEXT,
-    FOREIGN KEY (branch, program) REFERENCES Branches(name, program)
+    FOREIGN KEY (branch, program) REFERENCES Branches(name, program),
+    PRIMARY KEY(course, branch, program)
 ); 
 
 CREATE TABLE Registered(
     student TEXT REFERENCES Students(idnr),
-    course CHAR(6) REFERENCES Courses(code)
+    course CHAR(6) REFERENCES Courses(code),
+    PRIMARY KEY(student, course)
 );
 
 CREATE TABLE Taken(
     student TEXT REFERENCES Students(idnr),
     course CHAR(6) REFERENCES Courses(code),
-    grade CHAR(1) NOT NULL
+    grade CHAR(1) NOT NULL,
+    PRIMARY KEY(student, course)
 ); 
 
 CREATE TABLE WaitingList(-- position is either a SERIAL, a TIMESTAMP or the actual position 
     student TEXT REFERENCES Students(idnr),
     course CHAR(6) REFERENCES LimitedCourses(code),
-    position INT NOT NULL
+    position INT NOT NULL,
+    PRIMARY KEY(student, course)
 
 );
 

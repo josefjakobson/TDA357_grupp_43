@@ -60,47 +60,146 @@ CREATE VIEW Registrations AS
 
 CREATE VIEW MandatoryCourses AS
     SELECT
-    student, MandatoryBranch.course AS course
+    StudentBranches.student, 
+    MandatoryBranch.course AS course
     FROM StudentBranches, MandatoryBranch
     WHERE StudentBranches.branch = MandatoryBranch.branch
     AND StudentBranches.program = MandatoryBranch.program
     UNION
-    SELECT student, MandatoryProgram.course
-    FROM StudentBranches, MandatoryProgram
-    WHERE StudentBranches.program = MandatoryProgram.program;
+    SELECT 
+    idnr, 
+    MandatoryProgram.course
+    FROM BasicInformation, MandatoryProgram
+    WHERE BasicInformation.program = MandatoryProgram.program;
 
 CREATE VIEW UnreadMandatory AS
     SELECT
-    student, course
+    student,
+    course
     FROM MandatoryCourses
     EXCEPT 
     SELECT 
-    student, course
+    student, 
+    course
     FROM PassedCourses;
 
 CREATE VIEW TotalCredits AS
-    SELECT SUM(credits)
+    SELECT 
+    PassedCourses.student AS student, 
+    COALESCE(SUM(credits), 0) AS credits
     FROM PassedCourses
     Group by student;
 
 CREATE VIEW MandatoryLeft AS
-    SELECT COUNT(course)
+    SELECT 
+    UnreadMandatory.student, 
+    COUNT(course) as mandatoryleft
     FROM UnreadMandatory
     Group by student;
 
 CREATE VIEW MathCredits AS
-    SELECT SUM(credits)
+    SELECT 
+    PassedCourses.student, 
+    SUM(credits) as credits
     FROM PassedCourses, Classified
     WHERE PassedCourses.course = Classified.course
-    AND Classified.classification = 'Math'
+    AND Classified.classification = 'math'
     Group by student;
 
-/*CREATE VIEW ResearchCredits AS
+
+
+CREATE VIEW ResearchCredits AS
+    SELECT 
+    PassedCourses.student, 
+    SUM(credits) as credits
+    FROM PassedCourses, Classified
+    WHERE PassedCourses.course = Classified.course
+    AND Classified.classification = 'research'
+    Group by student;
+
 
 CREATE VIEW SeminarCourses AS
+    SELECT 
+    PassedCourses.student, 
+    COUNT(PassedCourses.course)
+    FROM PassedCourses, Classified
+    WHERE PassedCourses.course = Classified.course
+    AND Classified.classification = 'seminar'
+    Group by student;
 
-/*
+
+CREATE VIEW RecommendedCourses AS
+    SELECT
+    StudentBranches.student, 
+    RecommendedBranch.course AS course,
+    Courses.credits
+    FROM StudentBranches, RecommendedBranch, Courses
+    WHERE StudentBranches.branch = RecommendedBranch.branch AND RecommendedBranch.course = Courses.code
+    AND StudentBranches.program = RecommendedBranch.program;
+
+
+CREATE VIEW ReadRecommended AS
+    SELECT
+    student,
+    course, 
+    credits
+    FROM RecommendedCourses
+    INTERSECT 
+    SELECT 
+    student, 
+    course,
+    Courses.credits
+    FROM PassedCourses, Courses;
+
+CREATE VIEW RecommendedCredits AS
+    SELECT 
+    ReadRecommended.student, 
+    SUM(credits)
+    FROM ReadRecommended
+    Group by student;
+
+    
+CREATE VIEW RequirementsForGraduation AS
+    SELECT idnr AS student, 
+    COALESCE(TotalCredits.credits, 0) AS totalcredits,
+    COALESCE(MandatoryLeft.mandatoryleft, 0) AS mandatoryleft,
+    COALESCE(MathCredits.credits, 0) AS mathcredits,
+    COALESCE(ResearchCredits.credits, 0) AS researchcredits,
+    COALESCE(SeminarCourses.count, 0) AS seminarcourses,
+    COALESCE(RecommendedCredits.sum, 0) AS recommendedcredits
+    FROM Students
+    LEFT JOIN TotalCredits ON idnr = TotalCredits.student
+    LEFT JOIN MandatoryLeft ON idnr = MandatoryLeft.student
+    LEFT JOIN MathCredits ON idnr = MathCredits.student
+    LEFT JOIN ResearchCredits ON idnr = ResearchCredits.student
+    LEFT JOIN seminarCourses ON idnr = SeminarCourses.student
+    LEFT JOIN RecommendedCredits ON idnr = RecommendedCredits.student
+    ORDER BY student;
+
+
+CREATE VIEW Qualified AS
+    SELECT
+    RequirementsForGraduation.student,
+    CASE
+        WHEN RequirementsForGraduation.mandatoryleft = 0 AND
+            RequirementsForGraduation.recommendedcredits >= 10 AND
+            RequirementsForGraduation.mathcredits >= 20 AND
+            RequirementsForGraduation.researchcredits >= 10 AND
+            RequirementsForGraduation.seminarcourses > 0 THEN true
+        ELSE false
+    END AS qualified
+    FROM RequirementsForGraduation
+    ORDER BY student;
+
 CREATE VIEW PathToGraduation AS
+    SELECT
+    RequirementsForGraduation.student,
+    RequirementsForGraduation.totalcredits,
+    RequirementsForGraduation.mandatoryleft,
+    RequirementsForGraduation.mathcredits,
+    RequirementsForGraduation.researchcredits,
+    RequirementsForGraduation.seminarcourses,
+    Qualified.qualified
+    FROM RequirementsForGraduation
+    LEFT JOIN Qualified ON Qualified.student = RequirementsForGraduation.student;
 
-
-CREATE VIEW Qualified AS*/
