@@ -35,6 +35,13 @@ INSERT INTO StudentBranches VALUES ('5555555555','B1','Prog2');
 
 INSERT INTO MandatoryProgram VALUES ('CCC111','Prog1');
 
+INSERT INTO Programs VALUES('Prog1', 'P1')
+INSERT INTO Programs VALUES('Prog2', 'P2')
+
+INSERT INTO Departments VALUES('Dep1', 'D1')
+INSERT INTO Departments VALUES('Dep2', 'D2')
+
+
 INSERT INTO MandatoryBranch VALUES ('CCC333', 'B1', 'Prog1');
 INSERT INTO MandatoryBranch VALUES ('CCC444', 'B1', 'Prog2');
 
