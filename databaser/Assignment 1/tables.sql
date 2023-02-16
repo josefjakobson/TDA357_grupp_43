@@ -1,3 +1,15 @@
+CREATE TABLE Programs(
+    name TEXT PRIMARY KEY,
+    abbr TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE Departments(
+    name TEXT PRIMARY KEY,
+    abbr TEXT NOT NULL UNIQUE
+);
+
+
+
 CREATE TABLE Students(
     idnr TEXT PRIMARY KEY,
     name TEXT NOT NULL,
@@ -7,7 +19,7 @@ CREATE TABLE Students(
 
 CREATE TABLE Branches(
     name TEXT NOT NULL,
-    program TEXT REFERENCES Programs(name)
+    program TEXT REFERENCES Programs(name),
     PRIMARY KEY(name,program)
 );
 
@@ -15,7 +27,7 @@ CREATE TABLE Courses(
     code CHAR(6) PRIMARY KEY,
     name TEXT NOT NULL,
     credits FLOAT NOT NULL CHECK (credits > 0),
-    department TEXT REFRENCES Departments(name)
+    department TEXT REFERENCES Departments(name)
 );
 
 CREATE TABLE LimitedCourses(
@@ -28,18 +40,12 @@ CREATE TABLE StudentBranches(
     branch TEXT NOT NULL,
     program TEXT NOT NULL,
     FOREIGN KEY (branch, program) REFERENCES Branches(name, program),
-    PRIMARY KEY(student)
+    PRIMARY KEY(student),
+    CONSTRAINT branch_program CHECK(
+        SELECT program = Students.program FROM Students
+    )
 );
 
-CREATE TABLE Programs(
-    name TEXT PRIMARY KEY,
-    abbr TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE Departments(
-    name TEXT PRIMARY KEY,
-    abbr TEXT NOT NULL UNIQUE
-);
  
 CREATE TABLE Classifications(
     name TEXT PRIMARY KEY
