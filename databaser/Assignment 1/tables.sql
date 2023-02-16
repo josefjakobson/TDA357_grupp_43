@@ -38,7 +38,7 @@ CREATE TABLE Programs(
 
 CREATE TABLE Departments(
     name TEXT PRIMARY KEY,
-    abbr TEXT NOT NULL
+    abbr TEXT NOT NULL UNIQUE
 );
  
 CREATE TABLE Classifications(
