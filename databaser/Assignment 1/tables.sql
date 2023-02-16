@@ -1,7 +1,7 @@
 CREATE TABLE Students(
     idnr TEXT PRIMARY KEY,
     name TEXT NOT NULL,
-    login TEXT NOT NULL,
+    login TEXT NOT NULL UNIQUE,
     program TEXT REFERENCES Programs(name)
 );
 
@@ -33,12 +33,12 @@ CREATE TABLE StudentBranches(
 
 CREATE TABLE Programs(
     name TEXT PRIMARY KEY,
-    abbr TEXT NOT NULL
+    abbr TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE Departments(
     name TEXT PRIMARY KEY,
-    abbr TEXT NOT NULL
+    abbr TEXT NOT NULL UNIQUE
 );
  
 CREATE TABLE Classifications(
@@ -90,6 +90,7 @@ CREATE TABLE WaitingList(-- position is either a SERIAL, a TIMESTAMP or the actu
     student TEXT REFERENCES Students(idnr),
     course CHAR(6) REFERENCES LimitedCourses(code),
     position INT NOT NULL,
+    UNIQUE(position, course)
     PRIMARY KEY(student, course)
 
 );
