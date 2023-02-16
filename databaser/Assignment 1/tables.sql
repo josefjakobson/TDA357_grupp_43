@@ -14,13 +14,13 @@ CREATE TABLE Branches(
 CREATE TABLE Courses(
     code CHAR(6) PRIMARY KEY,
     name TEXT NOT NULL,
-    credits FLOAT NOT NULL,
+    credits FLOAT NOT NULL CHECK (credits > 0),
     department TEXT NOT NULL
 );
 
 CREATE TABLE LimitedCourses(
     code CHAR(6) REFERENCES Courses(code) PRIMARY KEY,
-    capacity INT NOT NULL
+    capacity INT NOT NULL CHECK (capacity > 0)
 );
 
 CREATE TABLE StudentBranches(
@@ -73,7 +73,7 @@ CREATE TABLE Registered(
 CREATE TABLE Taken(
     student TEXT REFERENCES Students(idnr),
     course CHAR(6) REFERENCES Courses(code),
-    grade CHAR(1) NOT NULL,
+    grade CHAR(1) NOT NULL CHECK (grade IN ('U','3','4','5')),
     PRIMARY KEY(student, course)
 ); 
 
