@@ -14,7 +14,8 @@ CREATE TABLE Students(
     idnr TEXT PRIMARY KEY,
     name TEXT NOT NULL,
     login TEXT NOT NULL UNIQUE,
-    program TEXT REFERENCES Programs(name)
+    program TEXT REFERENCES Programs(name),
+    UNIQUE (idnr, program)
 );
 
 CREATE TABLE Branches(
@@ -40,13 +41,16 @@ CREATE TABLE StudentBranches(
     branch TEXT NOT NULL,
     program TEXT NOT NULL,
     FOREIGN KEY (branch, program) REFERENCES Branches(name, program),
-    PRIMARY KEY(student),
-    CONSTRAINT branch_program CHECK(
-        SELECT program = Students.program FROM Students
-    )
+    FOREIGN KEY (student, program) REFERENCES Students(idnr, program),
+    PRIMARY KEY (student)
 );
 
- 
+CREATE TABLE PrerequisiteCourses(
+    course CHAR(6) REFERENCES Courses(code),
+    prerequisite CHAR(6),
+    PRIMARY KEY(course, prerequisite)
+);
+
 CREATE TABLE Classifications(
     name TEXT PRIMARY KEY
 );
@@ -96,7 +100,7 @@ CREATE TABLE WaitingList(-- position is either a SERIAL, a TIMESTAMP or the actu
     student TEXT REFERENCES Students(idnr),
     course CHAR(6) REFERENCES LimitedCourses(code),
     position INT NOT NULL,
-    UNIQUE(position, course)
+    UNIQUE(position, course),
     PRIMARY KEY(student, course)
 
 );
