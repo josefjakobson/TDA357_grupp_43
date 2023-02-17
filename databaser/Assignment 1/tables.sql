@@ -99,7 +99,7 @@ CREATE TABLE Taken(
 CREATE TABLE WaitingList(-- position is either a SERIAL, a TIMESTAMP or the actual position 
     student TEXT REFERENCES Students(idnr),
     course CHAR(6) REFERENCES LimitedCourses(code),
-    position INT NOT NULL,
+    position INT NOT NULL CHECK(position > 0),
     UNIQUE(position, course),
     PRIMARY KEY(student, course)
 

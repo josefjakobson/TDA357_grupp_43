@@ -41,7 +41,7 @@ INSERT INTO StudentBranches VALUES ('2222222222','B1','Prog1');
 INSERT INTO StudentBranches VALUES ('3333333333','B1','Prog2');
 INSERT INTO StudentBranches VALUES ('4444444444','B1','Prog1');
 INSERT INTO StudentBranches VALUES ('5555555555','B1','Prog2');
-INSERT INTO StudentBranches VALUES ('5555555555','B1','Prog2');
+--INSERT INTO StudentBranches VALUES ('6666666666','B3','Prog3'); Tests if constraint works
 
 
 INSERT INTO MandatoryProgram VALUES ('CCC111','Prog1');
