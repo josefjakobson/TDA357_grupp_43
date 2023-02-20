@@ -1,6 +1,7 @@
 CREATE TABLE Programs(
     name TEXT PRIMARY KEY,
-    abbr TEXT NOT NULL UNIQUE
+    abbr TEXT NOT NULL,
+    UNIQUE (name, abbr)
 );
 
 CREATE TABLE Departments(
