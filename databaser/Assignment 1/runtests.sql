@@ -28,7 +28,7 @@ SET client_min_messages TO NOTICE; -- More talk
 
 --SELECT student, course, credits FROM PassedCourses ORDER BY student;
 
---SELECT student, course, status FROM Registrations ORDER BY student;
+SELECT student, course, status FROM Registrations ORDER BY student;
 
 
 --SELECT * FROM MandatoryCourses;
@@ -43,7 +43,9 @@ SET client_min_messages TO NOTICE; -- More talk
 
 --SELECT * FROM MandatoryLeft;
 
-SELECT student, totalCredits, mandatoryLeft, mathCredits, researchCredits, seminarCourses, qualified FROM PathToGraduation ORDER BY student;
+-- SELECT student, totalCredits, mandatoryLeft, mathCredits, researchCredits, seminarCourses, qualified FROM PathToGraduation ORDER BY student;
+
+INSERT INTO Registered VALUES('4444444444','CCC222','waiting');
 
 
 -- Life-hack: When working on a new view you can write it as a query here (without creating a view) and when it works just add CREATE VIEW and put it in views.sql
