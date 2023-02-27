@@ -203,3 +203,9 @@ CREATE VIEW PathToGraduation AS
     FROM RequirementsForGraduation
     LEFT JOIN Qualified ON Qualified.student = RequirementsForGraduation.student;
 
+CREATE VIEW CourseQueuePositions AS
+    SELECT 
+    WaitingList.student AS student,
+    WaitingList.course AS course,
+    WaitingList.position AS place
+    FROM WaitingList

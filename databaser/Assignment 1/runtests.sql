@@ -45,5 +45,5 @@ SET client_min_messages TO NOTICE; -- More talk
 
 SELECT student, totalCredits, mandatoryLeft, mathCredits, researchCredits, seminarCourses, qualified FROM PathToGraduation ORDER BY student;
 
-
+SELECT * FROM CourseQueuePositions ORDER BY place
 -- Life-hack: When working on a new view you can write it as a query here (without creating a view) and when it works just add CREATE VIEW and put it in views.sql
