@@ -47,5 +47,5 @@ SELECT student, course, status FROM Registrations ORDER BY student;
 
 INSERT INTO Registered VALUES('4444444444','CCC222','waiting');
 
-
+SELECT * FROM CourseQueuePositions ORDER BY place
 -- Life-hack: When working on a new view you can write it as a query here (without creating a view) and when it works just add CREATE VIEW and put it in views.sql

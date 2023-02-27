@@ -220,3 +220,9 @@ $add_to_waiting_list$ LANGUAGE plpgsql;
 
 CREATE TRIGGER add_to_waiting_list INSTEAD OF INSERT OR UPDATE ON Registrations
     FOR EACH ROW EXECUTE FUNCTION add_to_waiting_list();
+CREATE VIEW CourseQueuePositions AS
+    SELECT 
+    WaitingList.student AS student,
+    WaitingList.course AS course,
+    WaitingList.position AS place
+    FROM WaitingList
