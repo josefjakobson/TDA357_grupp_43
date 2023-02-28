@@ -9,55 +9,45 @@ CREATE VIEW CourseQueuePositions AS
 
 
 CREATE OR REPLACE FUNCTION add_to_waiting_list() RETURNS TRIGGER AS $add_to_waiting_list$
-
     DECLARE newposition INT;
-
+    
     BEGIN
     
     IF EXISTS (SELECT student
     FROM Registrations
     WHERE student = NEW.student AND course = NEW.course)
         THEN
-        RAISE EXCEPTION 'You are already registered for this course.';
-    END IF;
+        RAISE EXCEPTION 'You are already registered for this course.'; END IF;
     
     IF EXISTS (SELECT student
     FROM Taken
     WHERE student = NEW.student AND course = NEW.course)
         THEN
-        RAISE EXCEPTION 'You have already taken this course.';
-    END IF;
+        RAISE EXCEPTION 'You have already taken this course.'; END IF;
     
     IF (SELECT COUNT(*) 
-    FROM PrerequisiteCourses LEFT JOIN Taken 
-    ON Taken.student = NEW.student AND Taken.course = prerequisite
-    WHERE PrerequisiteCourses.prerequisite = NEW.course AND Taken.student IS NULL) > 0
+    FROM PrerequisiteCourses LEFT JOIN PassedCourses 
+    ON PassedCourses.student = NEW.student AND PassedCourses.course = prerequisite
+    WHERE PrerequisiteCourses.prerequisite = NEW.course AND PassedCourses.student IS NULL) > 0
         THEN
-        RAISE EXCEPTION 'You have not read all the prerequistes for this particular course.';
-    END IF;
-    
+        RAISE EXCEPTION 'You have not read all the prerequistes for this particular course.'; END IF;
+
     IF EXISTS (SELECT code 
     FROM LimitedCourses
     WHERE code = NEW.course) AND (SELECT COUNT(student)
     FROM Registrations
     WHERE course = NEW.course AND status = 'registered') >= (SELECT capacity FROM LimitedCourses
     WHERE code = NEW.course)
-        
         THEN
-
-        SELECT COALESCE(MAX(position), 0) + 1
-        INTO newposition
+        SELECT COALESCE(MAX(position), 0) + 1   -- Selects the first available queue position.
+        INTO newposition                        
         FROM WaitingList
         WHERE course = NEW.course;
-
-        UPDATE WaitingList
+        UPDATE WaitingList -- Updates the waiting list
         SET student = NEW.student, course = NEW.course
-        WHERE position = newposition AND course = NEW.course;
-        
-    END IF;
+        WHERE position = newposition AND course = NEW.course; END IF;
     RETURN NULL;
     END;
-    
 $add_to_waiting_list$ LANGUAGE plpgsql;
 
 /*CREATE FUNCTION remove_from_waiting_list() RETURNS trigger AS $$
