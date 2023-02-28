@@ -10,8 +10,6 @@ CREATE TABLE Departments(
     abbr TEXT NOT NULL UNIQUE
 );
 
-
-
 CREATE TABLE Students(
     idnr TEXT PRIMARY KEY,
     name TEXT NOT NULL,
