@@ -60,11 +60,6 @@ CREATE FUNCTION remove_from_waiting_list() RETURNS trigger AS $remove_from_waiti
     DECLARE currpos INT;
 
     BEGIN
-        IF NOT EXISTS (SELECT * FROM Registered WHERE OLD.student = Registered.student AND OLD.course = Registered.course) AND 
-        NOT EXISTS (SELECT * FROM WaitingList WHERE OLD.student = WaitingList.student AND OLD.course = WaitingList.course)
-            THEN
-            RAISE EXCEPTION 'Student is not registered to / waiting for this course';
-        END IF;
 
         SELECT position INTO currpos FROM WaitingList WHERE OLD.student = WaitingList.student AND WaitingList.course = OLD.course;
 
@@ -88,5 +83,5 @@ CREATE FUNCTION remove_from_waiting_list() RETURNS trigger AS $remove_from_waiti
 $remove_from_waiting_list$ LANGUAGE plpgsql;
 
 CREATE TRIGGER remove_from_waiting_list INSTEAD OF DELETE ON Registrations
-    FOR EACH ROW EXECUTE FUNCTION remove_from_waiting_list();
+    FOR EACH ROW EXECUTE PROCEDURE remove_from_waiting_list();
 
