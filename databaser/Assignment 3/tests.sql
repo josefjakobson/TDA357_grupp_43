@@ -1,6 +1,7 @@
 -- TEST #1: Register for an unlimited course.
 -- EXPECTED OUTCOME: Pass
-INSERT INTO Registrations VALUES ('4444444444', 'CCC555'); 
+INSERT INTO Registrations VALUES ('6666666666', 'CCC111');
+SELECT * FROM Registrations;
 
 -- TEST #2: Register an already registered student.
 -- EXPECTED OUTCOME: Fail
@@ -21,7 +22,6 @@ INSERT INTO Registrations VALUES ('1111111111', 'CCC666');
 -- TEST #6: Remove from Waiting List
 -- EXPECTE OUTCOME: Pass
 DELETE FROM Registrations WHERE student = '2222222222' AND course = 'CCC333';
-DELETE FROM Registrations WHERE student = '2222222222' AND course = 'CCC333';
 
 -- TEST #7: Unregister from Limited course with empty waiting list
 -- EXPECTE OUTCOME: Pass
@@ -33,12 +33,27 @@ SELECT * FROM WaitingList;
 -- EXPECTE OUTCOME: Pass
 DELETE FROM Registrations WHERE student = '5555555555' AND course = 'CCC333';
 
-SELECT * FROM WaitingList;
--- TEST #9: Unregister from middle in waiting list
+-- TEST #8: Unregister from Limited course with waiting list
 -- EXPECTE OUTCOME: Pass
-DELETE FROM Registrations WHERE student = '7777777777' AND course = 'CCC222';
+DELETE FROM Registrations WHERE student = '5555555555' AND course = 'CCC333';
+
+-- TEST #9: Register to a Passed course
+-- EXPECTE OUTCOME: Fail
+--INSERT INTO Registrations VALUES('4444444444', 'CCC333');
+
+-- TEST #10: Register to course with prerequisites
+-- EXPECTE OUTCOME: Pass
+INSERT INTO Registrations VALUES ('4444444444', 'CCC555');
+
+-- TEST #11: Register to course without prerequisites
+-- EXPECTE OUTCOME: Fail
+INSERT INTO Registrations VALUES ('1111111111', 'CCC555');
+
+
+
+
 SELECT * FROM WaitingList;
 
-
+SELECT * FROM WaitingList;
 
 

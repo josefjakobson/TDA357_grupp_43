@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION add_to_waiting_list() RETURNS TRIGGER AS $add_to_wait
 
     IF EXISTS (SELECT student
     FROM Taken
-    WHERE student = NEW.student AND course = NEW.course)
+    WHERE student = NEW.student AND course = NEW.course AND (grade != 'U' OR NULL))
         THEN
         RAISE EXCEPTION 'You have already taken this course.'; END IF;
 
