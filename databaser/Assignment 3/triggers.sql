@@ -31,8 +31,6 @@ CREATE OR REPLACE FUNCTION add_to_waiting_list() RETURNS TRIGGER AS $add_to_wait
         THEN
         RAISE EXCEPTION 'You have not read all the prerequistes for this particular course.'; END IF;
 
-        RAISE EXCEPTION 'You have not read all the prerequistes for this particular course.'; END IF;
-
     IF EXISTS (SELECT code 
     FROM LimitedCourses
     WHERE code = NEW.course) AND (SELECT COUNT(student)
@@ -58,13 +56,20 @@ CREATE TRIGGER add_to_waiting_list INSTEAD OF INSERT OR UPDATE ON Registrations
 
 
 CREATE FUNCTION remove_from_waiting_list() RETURNS trigger AS $remove_from_waiting_list$
+
+    DECLARE currpos INT;
+
     BEGIN
+
+        SELECT position INTO currpos FROM WaitingList WHERE OLD.student = WaitingList.student AND WaitingList.course = OLD.course;
 
         IF EXISTS (SELECT * FROM Registered WHERE OLD.student = Registered.student AND Registered.course = OLD.course) THEN
         DELETE FROM Registered WHERE OLD.student = Registered.student AND Registered.course = OLD.course; END IF;
         
         IF EXISTS (SELECT * FROM WaitingList WHERE OLD.student = WaitingList.student AND WaitingList.course = OLD.course) THEN
-        DELETE FROM WaitingList WHERE OLD.student = WaitingList.student AND WaitingList.course = OLD.course; END IF;
+        DELETE FROM WaitingList WHERE OLD.student = WaitingList.student AND WaitingList.course = OLD.course;
+        UPDATE WaitingList SET position = position - 1 WHERE WaitingList.course = OLD.course AND position > currpos; 
+        END IF;
 
         IF (SELECT COUNT(student) FROM Registered WHERE Registered.course = OLD.course) < 
            (SELECT capacity FROM LimitedCourses WHERE OLD.course = LimitedCourses.code) 
