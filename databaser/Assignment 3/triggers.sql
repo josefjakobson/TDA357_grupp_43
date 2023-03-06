@@ -60,6 +60,11 @@ CREATE FUNCTION remove_from_waiting_list() RETURNS trigger AS $remove_from_waiti
     DECLARE currpos INT;
 
     BEGIN
+        IF NOT EXISTS (SELECT * FROM Registered WHERE OLD.student = Registered.student AND OLD.course = Registered.course) AND 
+        NOT EXISTS (SELECT * FROM WaitingList WHERE OLD.student = WaitingList.student AND OLD.course = WaitingList.course)
+            THEN
+            RAISE EXCEPTION 'Student is not registered to / waiting for this course';
+        END IF;
 
         SELECT position INTO currpos FROM WaitingList WHERE OLD.student = WaitingList.student AND WaitingList.course = OLD.course;
 
@@ -78,9 +83,6 @@ CREATE FUNCTION remove_from_waiting_list() RETURNS trigger AS $remove_from_waiti
             DELETE FROM WaitingList WHERE OLD.course = WaitingList.course AND WaitingList.position = 1;
         END IF;
 
-        IF NOT EXISTS (SELECT * FROM Registered WHERE OLD.student = Registered.student AND OLD.course = Registered.course)
-            THEN
-            RAISE EXCEPTION 'Student is not registered to this course';
     RETURN NULL;
     END;
 $remove_from_waiting_list$ LANGUAGE plpgsql;

@@ -1,7 +1,6 @@
 -- TEST #1: Register for an unlimited course.
 -- EXPECTED OUTCOME: Pass
 INSERT INTO Registrations VALUES ('6666666666', 'CCC111');
-SELECT * FROM Registrations;
 
 -- TEST #2: Register an already registered student.
 -- EXPECTED OUTCOME: Fail
@@ -47,12 +46,15 @@ INSERT INTO Registrations VALUES ('4444444444', 'CCC555');
 
 -- TEST #11: Register to course without prerequisites
 -- EXPECTE OUTCOME: Fail
-INSERT INTO Registrations VALUES ('1111111111', 'CCC555');
+--INSERT INTO Registrations VALUES ('1111111111', 'CCC555');
 
+-- TEST #12: Unregister student from course that it is not registered to
+-- EXPECTE OUTCOME: Fail
 
+SELECT * FROM Registrations;
 
+DELETE FROM Registrations WHERE student = '5555555555' AND course = 'CCC333';
 
-SELECT * FROM WaitingList;
 
 SELECT * FROM WaitingList;
 
