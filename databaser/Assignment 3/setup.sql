@@ -200,6 +200,7 @@ INSERT INTO WaitingList VALUES('3333333333','CCC333',1);
 INSERT INTO WaitingList VALUES('2222222222','CCC333',2);
 
 INSERT INTO PrerequisiteCourses VALUES ('CCC555', 'CCC444');
+INSERT INTO PrerequisiteCourses VALUES ('CCC555', 'CCC111');
 
 -- VIEWS ----------------------------------------------------------------------------------------
 
