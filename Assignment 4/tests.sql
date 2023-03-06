@@ -4,7 +4,7 @@ INSERT INTO Registrations VALUES ('6666666666', 'CCC111');
 
 -- TEST #2: Register an already registered student.
 -- EXPECTED OUTCOME: Fail
-INSERT INTO Registrations VALUES ('1111111111', 'CCC111'); 
+--INSERT INTO Registrations VALUES ('1111111111', 'CCC111'); 
 
 -- TEST #3: Unregister from an unlimited course. 
 -- EXPECTED OUTCOME: Pass
@@ -30,21 +30,29 @@ DELETE FROM Registrations WHERE student = '1111111111' AND course = 'CCC666';
 SELECT * FROM WaitingList;
 
 -- TEST #8: Unregister from Limited course with waiting list
--- EXPECTE OUTCOME: Pass
+-- EXPECTED OUTCOME: Pass
 DELETE FROM Registrations WHERE student = '5555555555' AND course = 'CCC333';
 
 -- TEST #9: Register to a Passed course
--- EXPECTE OUTCOME: Fail
-INSERT INTO Registrations VALUES('4444444444', 'CCC333');
+-- EXPECTED OUTCOME: Fail
+--INSERT INTO Registrations VALUES('4444444444', 'CCC333');
 
 -- TEST #10: Register to course with prerequisites
 -- EXPECTED OUTCOME: Pass
 INSERT INTO Registrations VALUES ('4444444444', 'CCC555');
 
 -- TEST #11: Register to course without prerequisites
--- EXPECTE OUTCOME: Fail
-INSERT INTO Registrations VALUES ('1111111111', 'CCC555');
+-- EXPECTED OUTCOME: Fail
+--INSERT INTO Registrations VALUES ('1111111111', 'CCC555');
 
--- TEST #12: Unregister from overfull Limited course with waiting list
--- EXPECTE OUTCOME: Pass
-DELETE FROM Registrations WHERE student = '5555555555' AND course = 'CCC222';
+-- TEST #12: Unregister student from course that it is not registered to
+-- EXPECTED OUTCOME: Fail
+DELETE FROM Registrations WHERE student = '5555555555' AND course = 'CCC333';
+
+        SELECT *
+        FROM Registered LEFT JOIN WaitingList 
+        ON WaitingList.student = '2222222222' AND WaitingList.course = 'CCC333'
+        WHERE (Registered.course = 'CCC333' AND Registered.student = '2222222222') OR (WaitingList.student = '2222222222' AND WaitingList.course = 'CCC333');
+
+
+

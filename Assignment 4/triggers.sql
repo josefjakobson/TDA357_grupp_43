@@ -81,5 +81,5 @@ CREATE FUNCTION remove_from_waiting_list() RETURNS trigger AS $remove_from_waiti
 $remove_from_waiting_list$ LANGUAGE plpgsql;
 
 CREATE TRIGGER remove_from_waiting_list INSTEAD OF DELETE ON Registrations
-    FOR EACH ROW EXECUTE PROCEDURE remove_from_waiting_list();
+    FOR EACH ROW EXECUTE FUNCTION remove_from_waiting_list();
 
