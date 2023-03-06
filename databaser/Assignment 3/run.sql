@@ -10,6 +10,7 @@ GRANT ALL ON SCHEMA public TO CURRENT_USER;
 \set ON_ERROR_STOP ON
 SET client_min_messages TO NOTICE; -- More talk
 \set QUIET false
+\pset pager 0
 
 
 -- \ir is for include relative, it will run files in the same directory as this file
