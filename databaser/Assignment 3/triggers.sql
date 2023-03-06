@@ -77,6 +77,10 @@ CREATE FUNCTION remove_from_waiting_list() RETURNS trigger AS $remove_from_waiti
             INSERT INTO Registered SELECT student, course FROM WaitingList WHERE WaitingList.course = OLD.course AND WaitingList.position = 1;
             DELETE FROM WaitingList WHERE OLD.course = WaitingList.course AND WaitingList.position = 1;
         END IF;
+
+        IF NOT EXISTS (SELECT * FROM Registered WHERE OLD.student = Registered.student AND OLD.course = Registered.course)
+            THEN
+            RAISE EXCEPTION 'Student is not registered to this course';
     RETURN NULL;
     END;
 $remove_from_waiting_list$ LANGUAGE plpgsql;
