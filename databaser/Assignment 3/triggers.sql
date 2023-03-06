@@ -10,7 +10,7 @@ CREATE VIEW CourseQueuePositions AS
 
 CREATE OR REPLACE FUNCTION add_to_waiting_list() RETURNS TRIGGER AS $add_to_waiting_list$
     DECLARE newposition INT;
-
+    
     BEGIN
     IF EXISTS (SELECT student
     FROM Registrations
@@ -29,6 +29,8 @@ CREATE OR REPLACE FUNCTION add_to_waiting_list() RETURNS TRIGGER AS $add_to_wait
     ON PassedCourses.student = NEW.student AND PassedCourses.course = prerequisite
     WHERE PrerequisiteCourses.course = NEW.course AND PassedCourses.student IS NULL) > 0
         THEN
+        RAISE EXCEPTION 'You have not read all the prerequistes for this particular course.'; END IF;
+
         RAISE EXCEPTION 'You have not read all the prerequistes for this particular course.'; END IF;
 
     IF EXISTS (SELECT code 
