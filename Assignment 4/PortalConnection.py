@@ -6,7 +6,7 @@ class PortalConnection:
         self.conn = psycopg2.connect(
             host="localhost",
             user="postgres",
-            password="postgres")
+            password="Fik6r3Nc")
         self.conn.autocommit = True
 
     def getInfo(self,student):
@@ -27,20 +27,24 @@ class PortalConnection:
             return """{"student":"Not found :("}"""
 
     def register(self, student, courseCode):
-        try:
-            #Your code goes here! Remove this comment and the line below it. 
-            return """{"success":false, "error":"Registration not implemented"}"""
-        except psycopg2.Error as e:
-            message = getError(e)
-            return '{"success":false, "error": "'+message+'"}'
+        query = f"INSERT INTO Registrations Values('{student}', '{courseCode}')"
+        with self.conn.cursor() as cursor:
+            try:
+                cursor.execute(query)
+                return '{"success":true}'
+            except psycopg2.Error as e:
+                message = getError(e)
+                return '{"success":false, "error": "'+message+'"}'
 
     def unregister(self, student, courseCode):
-        try:
-            #Your code goes here! Remove this comment and the line below it. 
-            return """{"success":false, "error":"Unregistration not implemented"}"""
-        except psycopg2.Error as e:
-            message = getError(e)
-            return '{"success":false, "error": "'+message+'"}'
+        query = f"DELETE FROM Registrations WHERE student = '{student}' AND course = '{courseCode}'"
+        with self.conn.cursor() as cursor:
+            try:
+                cursor.execute(query)
+                return '{"success":true}'
+            except psycopg2.Error as e:
+                message = getError(e)
+                return '{"success":false, "error": "'+message+'"}'
 
 def getError(e):
     message = repr(e)
